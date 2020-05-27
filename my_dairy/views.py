@@ -14,16 +14,16 @@ def home(request):
 def add_customer(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST)
-    if form.is_valid():
-        form.save()
-        return redirect('home')
+        if form.is_valid():
+            form.save()
+            return redirect('home')
     else:
         form = ProfileForm()
     return render(request, 'my_dairy/add_customer.html')
 
 @login_required
 def morning_all_customer(request):
-    customer_info = models.Profile.objects.all.filter(time="Morning")
+    customer_info = models.Profile.objects.filter(time="Morning")
     context = {
         'customer_info': customer_info
     }
@@ -31,7 +31,7 @@ def morning_all_customer(request):
 
 @login_required
 def evening_all_customer(request):
-    customer_info = models.Profile.objects.all.filter(time="Evening")
+    customer_info = models.Profile.objects.filter(time="Evening")
     context = {
         'customer_info': customer_info
     }
