@@ -19,7 +19,10 @@ def add_customer(request):
             return redirect('home')
     else:
         form = ProfileForm()
-    return render(request, 'my_dairy/add_customer.html')
+        context = {
+            'form': form,
+        }
+    return render(request, 'my_dairy/add_customer.html', context)
 
 @login_required
 def morning_all_customer(request):
