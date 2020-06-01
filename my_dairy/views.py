@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import *
+from .forms import ProfileForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from allauth.account.views import SignupView
 from .models import *
@@ -9,6 +9,23 @@ from django.contrib.auth.models import User
 
 def home(request):
     return render(request, 'my_dairy/home.html')
+
+def accountSignup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            # If you want to login user after signup, than use this code
+            # username = form.cleaned_data.get('username')
+            # raw_password = form.cleaned_data.get('password1')
+            # user = authenticate(username=username, password=raw_password)
+            # login(request, user)
+
+            return redirect('add_customer')
+    else:
+        form = SignUpForm()
+    return render(request, 'my_dairy/signup2.html', {'form': form})
 
 @login_required
 def add_customer(request):
@@ -42,9 +59,8 @@ def evening_all_customer(request):
 
 def customer_ledger(request, pk):
     customer_obj = get_object_or_404(User, pk=pk)
-    cus_user_info = models.Profile.objects.all.filter(user=customer_obj)
+    cus_user_info = models.Profile.objects.get(user=customer_obj)
     cus_ledger_info = models.CustomerLedger.objects.filter(related_customer=customer_obj)
-
     customer_full_name = f"{cus_user_info.first_name} {cus_user_info.last_name}"
 
     all_total = 0.0
@@ -62,12 +78,13 @@ def customer_ledger(request, pk):
 
 def customer_ledger_save(request):
     if request.method == 'POST':
+        print(request.POST)
         customer_pk = request.POST.get("customer", None)
         date = request.POST.get("date", None)
         quantity = request.POST.get("quantity", None)
-        related_customer = request.POST.get(pk=customer_pk)
+        related_customer = models.User.objects.get(pk=customer_pk)
         price = request.POST.get("price", None)
-        total = request.POST.get("total", None)
+        total = float(price)*float(quantity)
 
         data = models.CustomerLedger(
             related_customer=related_customer,
@@ -78,7 +95,7 @@ def customer_ledger_save(request):
         )
         data.save()
 
-        current_url = "/customer_ledger/" + str(customer_pk) + "/"
+        current_url = "/customer_ledger/" + str(customer_pk)
 
         return redirect(current_url)
 
@@ -88,14 +105,15 @@ def customer_ledger_delete(request):
         customer_ledger_entry = models.CustomerLedger.objects.get(pk=pk)
         customer_ledger_entry.delete()
         customer_pk = customer_ledger_entry.related_customer.pk
-        current_url = "/customer_ledger/" + str(customer_pk) + "/"
+        current_url = "/customer_ledger/" + str(customer_pk)
 
         return redirect(current_url)
 
 def customer_page(request):
     customer = request.user
     customer_info = models.CustomerLedger.objects.filter(related_customer=customer)
-    cus_user_info = models.Profile_objects.all.filter(user=user)
+    print(customer_info)
+    cus_user_info = models.Profile.objects.get(user=customer)
 
     all_total = 0.0
 

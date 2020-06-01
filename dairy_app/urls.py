@@ -21,15 +21,17 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('account/signup/', views.accountSignup, name='accountSignup'),
     path('accounts/', include('allauth.urls')),
     path('', views.home, name='home'),
     path('add_customer/', views.add_customer, name='add_customer'),
     path('morning_all_customer/', views.morning_all_customer, name='morning_all_customer'),
     path('evening_all_customer/', views.evening_all_customer, name='evening_all_customer'),
-    path('customer_ledger/', views.customer_ledger, name='customer_ledger'),
+    path('customer_ledger/<pk>', views.customer_ledger, name='customer_ledger'),
     path('customer_ledger_save/', views.customer_ledger_save, name='customer_ledger_save'),
     path('customer_ledger_delete/', views.customer_ledger_delete, name='customer_ledger_delete'),
-    path('customer_page/', views.customer_page, name='customer_page')
+    path('customer_page/', views.customer_page, name='customer_page'),
+    
 ]
 if settings.DEBUG == True or settings.DEBUG == False:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

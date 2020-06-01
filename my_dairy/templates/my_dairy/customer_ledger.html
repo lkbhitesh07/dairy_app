@@ -10,6 +10,7 @@
             <th scope="col">Customer</th>
             <th scope="col">Date</th>
             <th scope="col">Quantity(Liter)</th>
+            <th scope="col">Price</th>
             <th scope="col">Save</th>
          </tr>
       </thead>
@@ -37,6 +38,13 @@
                   <div class="form-row">
                      <div class="col">
                         <input type="name" class="form-control"  name="quantity" placeholder="0"  pattern="\d+">
+                     </div>
+                  </div>
+               </td>
+               <td scpoe="col">
+                  <div class="form-row">
+                     <div class="col">
+                        <input type="name" class="form-control"  name="price" placeholder="0"  pattern="\d+">
                      </div>
                   </div>
                </td>
@@ -89,7 +97,7 @@
 
 <script>
    $(function() {
-      $( "#datepicker" ).datepicker({dateFormat:"dd-mm-yy",});
+      $( "#datepicker" ).datepicker({dateFormat:"yy-mm-dd",});
    
    });
 </script>

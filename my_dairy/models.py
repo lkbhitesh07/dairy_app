@@ -26,7 +26,7 @@ class Profile(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class CustomerLedger(models.Model):
-    related_customer = models.ForeignKey(User, related_name='CustomerLedger', on_delete=models.CASCADE, null=True)
+    related_customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     date = models.DateField(default=datetime.date.today)
     price = models.IntegerField(default=0)
     quantity = models.FloatField(max_length=10, default=0.0)
